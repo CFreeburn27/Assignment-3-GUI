@@ -11,10 +11,9 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 UPLOAD_FOLDER = './static/'
 
 exampleBookPredictions = {}
-exampleBookPredictions['Genre'] = 'History'
 exampleBookPredictions['Confidence'] = '0.6679179'
 exampleBookPredictions['FileName'] = 'why_nations_fail.jpg'
-
+exampleBookPredictions['Genre'] = 'Business & Money'
 
 app = Flask(__name__)
 
