@@ -29,12 +29,29 @@
 
 <br />
 
-<h3>Book Predictions</h3>
+<h3>Book Genre Predictions</h3>
 
 <table id = "bookDetails">
-    {% for key, value in exampleBookDetails.items() %}
+    {% for key, value in exampleBookGenrePredictions.items() %}
        <tr>
             <th> {{ key }} </th>
             <td> {{ value }} </td>
        </tr>
     {% endfor %}
+
+</table>
+
+<br />
+
+<h3>Book Information Predictions</h3>
+
+<br />
+
+<table id = "bookDetails">
+    {% for key, value in exampleBookInfoPredictions.items() %}
+        <tr>
+            <th> {{ key }} </th>
+            <td> {{ value }} </td>
+        </tr>
+    {% endfor %}
+</table>

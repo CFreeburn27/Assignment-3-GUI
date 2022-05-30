@@ -6,7 +6,7 @@
 
 <html lang = "en">
    <head></head>
-   <h1>Books Database</h1>
+   <h1>Books Genre Predictions Database</h1>
    <body>
       
     <table id = "bookDetails">
@@ -20,7 +20,7 @@
          </thead>
          
          <tbody>
-            {% for book in Books %}
+            {% for book in GenreBookPredictions %}
                <tr>
                   <td>{{ book.FileName }}</td>
                   <td>{{ book.Genre }}</td>
