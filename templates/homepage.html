@@ -11,6 +11,7 @@
     This website allows you to upload an Image of a Book Cover,
     Our model will extract the Genre, the Confidence of the prediction and filename of the image using machine learning. The Book Predictions will then be stored in a 
     database for you to access.
+    The application will use OCR to extract text from the book cover and run it through Googles Books API to gather the information which will also be stored in a database
     </p>
 
 <h2>Here is an Example</h2>
@@ -20,7 +21,7 @@
 <img src="{{ image }}" alt="User Image" width="70%" height="70%"; height:auto; class="imagecenter">
 
 <br />
-<h3>Extract the Book Information</h3>
+<h3>Extract the Book Information and Genre</h3>
 <br />
 <br />
 

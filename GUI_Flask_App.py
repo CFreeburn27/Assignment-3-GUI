@@ -5,8 +5,11 @@ import os
 from booksDatabase import db, BooksPredictions, BooksInformation
 from genre_model import GenreModel
 from googleAPI import get_book_details_from_google
+from ocr_feature import MainOCR
 
-model = GenreModel()
+# configure the 2 models
+genremodel = GenreModel()
+infomodel = MainOCR()
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 UPLOAD_FOLDER = './static/'
@@ -28,7 +31,7 @@ exampleBookInfoPredictions['FileName'] = 'example_image_homepage.jpg'
 app = Flask(__name__)
 app.config ['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///BooksPredictions.sqlite3'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SECRET_KEY'] = 'the random string'    
+app.config['SECRET_KEY'] = 'jwdjsjfnjsdfjasdfojkadsnfjadjfnasdfjfgndfsgkjfadgjadfngnadfj'    
 db.init_app(app)
 nav = Navigation(app)
 with app.app_context():
@@ -46,11 +49,13 @@ nav.Bar('top', [
 #function to check file type
 def allowed_file(filename):     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# home page 
 @app.route('/')
 def home_page():
     return render_template('homepage.html', image = 'static/example_image_homepage.jpg', exampleBookGenrePredictions=exampleBookGenrePredictions,
                            exampleBookInfoPredictions = exampleBookInfoPredictions)
-    
+
+# upload image and run through models    
 @app.route('/uploadImage', methods=['POST', 'GET'])
 def upload_cover():
     if request.method == 'POST':
@@ -68,47 +73,45 @@ def upload_cover():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # genre predict model
-            genre, confidence = model.predict_genre('static/' + filename)
+            genre, confidence = genremodel.predict_genre('static/' + filename)
             session['book_genre_predictions'] = {'Genre': genre, 'Confidence':str(confidence), 'File Name':filename}
-            print(session['book_genre_predictions'])
-            
-            # add ocr model
-            
-            
-            
+            # ocr model prediction
+            session['book_info_predictions'] = infomodel.OCR('static/' + filename)
+            session['book_info_predictions']['FileName'] = filename
             
         return redirect(url_for('book_details'))
     return render_template('uploadCover.html')
 
 @app.route('/bookDetails')
 def book_details():
+    # display results and save to databases
+    book_info_predictions = session['book_info_predictions']
+    book_info_predictions = get_book_details_from_google(book_info_predictions['predTitle'], book_info_predictions['predAuthor'])
+    book_info_predictions['FileName'] = session['book_info_predictions']['FileName']
+    commitBookInfoPred = BooksInformation(book_info_predictions['title'], book_info_predictions['authors'], book_info_predictions['publisher'], book_info_predictions['categories'], book_info_predictions['FileName'])
+    db.session.add(commitBookInfoPred)
+    db.session.commit()
+
     book_genre_predictions=session['book_genre_predictions']
-    # book_info_predictions = session['book_info_predictions']
-    book_info_predictions = exampleBookInfoPredictions
     commitBookGenrePred = BooksPredictions(book_genre_predictions['Genre'], book_genre_predictions['Confidence'], book_genre_predictions['File Name'])
     db.session.add(commitBookGenrePred)
     db.session.commit()
     return render_template('book_details.html', book_genre_predictions = book_genre_predictions, image = 'static/' + book_genre_predictions['File Name'], book_info_predictions = book_info_predictions)
 
+# get all genre predictions
 @app.route('/show_all_genre_pred')
 def show_all_genre_pred():
    return render_template('show_all_genre_pred.html', GenreBookPredictions = BooksPredictions.query.all())
 
+# get all info predictions
 @app.route('/show_all_book_info')
 def show_all_book_info():
    return render_template('show_all_book_info.html', GenreInfoPredictions = BooksInformation.query.all())
 
+# about us page
 @app.route('/about_us')
 def about_us():
     return render_template('about_us.html')
-
-@app.route('/hello')
-def hello():
-    print(exampleBookInfoPredictions['FileName'])
-    me = BooksInformation(exampleBookInfoPredictions['Title'], exampleBookInfoPredictions['Author'], exampleBookInfoPredictions['Genre'], exampleBookInfoPredictions['Publisher'],exampleBookInfoPredictions['FileName'])
-    db.session.add(me)
-    db.session.commit()
-    return 'done'
 
 if __name__ == '__main__':
     app.run(debug=True)

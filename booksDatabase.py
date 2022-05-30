@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
     
+# database for genre predictions    
 class BooksPredictions(db.Model):
     id = db.Column('book_id', db.Integer, primary_key = True)
     Genre = db.Column(db.String(100))
@@ -14,6 +15,7 @@ class BooksPredictions(db.Model):
         self.Confidence = Confidence
         self.FileName = FileName
 
+# database for info predictions
 class BooksInformation(db.Model):
     id = db.Column('book_id', db.Integer, primary_key = True)
     Title = db.Column(db.String(100))
