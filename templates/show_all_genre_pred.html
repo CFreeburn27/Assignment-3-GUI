@@ -6,26 +6,26 @@
 
 <html lang = "en">
    <head></head>
-   <h1>Books Database</h1>
+   <h1>Books Genre Predictions Database</h1>
    <body>
       
     <table id = "bookDetails">
          <thead>
             <tr>
-               <th>Title</th>
-               <th>Author</th>
+               <th>FileName</th>
                <th>Genre</th>
-               <th>Publisher</th>
+               <th>Confidence</th>
+               <th>Book Cover Image</th>
             </tr>
          </thead>
          
          <tbody>
-            {% for book in Books %}
+            {% for book in GenreBookPredictions %}
                <tr>
-                  <td>{{ book.Title }}</td>
-                  <td>{{ book.Author }}</td>
+                  <td>{{ book.FileName }}</td>
                   <td>{{ book.Genre }}</td>
-                  <td>{{ book.Publisher }}</td>
+                  <td>{{ book.Confidence }}</td>
+                  <td><img src="static/{{ book.FileName }}" alt="" border=3 height=50%% width=50%%></img></td>
                </tr>
             {% endfor %}
          </tbody>

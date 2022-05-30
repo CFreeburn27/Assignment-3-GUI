@@ -1,0 +1,37 @@
+{% include  "navigation_bar.html" %}
+{% block body %}
+{% endblock %}
+ 
+<link rel="stylesheet" href="{{ url_for('static', filename = 'styles/styles.css') }}">
+
+<html lang = "en">
+   <head></head>
+   <h1>Books Information Predictions Database</h1>
+   <body>
+      
+    <table id = "bookDetails">
+         <thead>
+            <tr>
+               <th>Title</th>
+               <th>Author</th>
+               <th>Genre</th>
+               <th>Publisher</th>
+               <th>Book Cover Image</th>
+            </tr>
+         </thead>
+         
+         <tbody>
+            {% for book in GenreInfoPredictions %}
+               <tr>
+                  <td>{{ book.Title }}</td>
+                  <td>{{ book.Author }}</td>
+                  <td>{{ book.Genre }}</td>
+                  <td>{{ book.Publisher }}</td>
+                  <td><img src="static/{{ book.FileName }}" alt="" border=3 height=50%% width=50%%></img></td>
+               </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+      
+   </body>
+</html>

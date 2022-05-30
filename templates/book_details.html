@@ -7,16 +7,31 @@
 <h1>Book Details</h1>
 
 <body>
-<img src="{{ image }}" alt="User Image" width="100%" height="100%" class="imagecenter">
+<img src="{{ image }}" alt="User Image" width="70%" height="70%" class="imagecenter">
 </body>
 
 &nbsp
 
+<h3>Book Genre Predictions</h3>
+
 <table id = "bookDetails">
-{% for key, value in bookDetails.items() %}
+{% for key, value in book_genre_predictions.items() %}
    <tr>
         <th> {{ key }} </th>
         <td> {{ value }} </td>
    </tr>
 {% endfor %}
-  </table>
+</table>
+
+<h3>Book Information Predictions</h3>
+
+<br />
+
+<table id = "bookDetails">
+    {% for key, value in book_info_predictions.items() %}
+        <tr>
+            <th> {{ key }} </th>
+            <td> {{ value }} </td>
+        </tr>
+    {% endfor %}
+</table>
