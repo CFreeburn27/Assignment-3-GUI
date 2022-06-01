@@ -58,9 +58,8 @@ def upload_cover():
 @app.route('/bookDetails', methods=["POST", 'GET'])
 def book_details():
     if request.method == "POST":
-        bookid = request.form["booktitleE"]
+        bookid = request.form["booktitle"]
         print(bookid)
-        print('ok')
     return render_template('book_details.html', bookDetails=exampleBookDetails, image = 'static/why_nations_fail.jpg')
 
 @app.route('/show_all')
