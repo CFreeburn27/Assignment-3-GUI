@@ -79,11 +79,27 @@ def upload_cover():
             session['book_info_predictions'] = infomodel.OCR('static/' + filename)
             session['book_info_predictions']['FileName'] = filename
             
-        return redirect(url_for('book_details'))
+        return redirect(url_for('check_book_details'))
     return render_template('uploadCover.html')
 
-@app.route('/bookDetails')
-def book_details():
+@app.route('/checkbookDetails')
+def check_book_details():
+    # display results and save to databases
+    book_info_predictions = session['book_info_predictions']
+    book_info_predictions = get_book_details_from_google(book_info_predictions['predTitle'], book_info_predictions['predAuthor'])
+    book_info_predictions['FileName'] = session['book_info_predictions']['FileName']
+    commitBookInfoPred = BooksInformation(book_info_predictions['title'], book_info_predictions['authors'], book_info_predictions['publisher'], book_info_predictions['categories'], book_info_predictions['FileName'])
+    db.session.add(commitBookInfoPred)
+    db.session.commit()
+
+    book_genre_predictions=session['book_genre_predictions']
+    commitBookGenrePred = BooksPredictions(book_genre_predictions['Genre'], book_genre_predictions['Confidence'], book_genre_predictions['File Name'])
+    db.session.add(commitBookGenrePred)
+    db.session.commit()
+    return render_template('check_book_details.html', book_genre_predictions = book_genre_predictions, image = 'static/' + book_genre_predictions['File Name'], book_info_predictions = book_info_predictions)
+
+@app.route('/editbookDetails')
+def checK_book_details():
     # display results and save to databases
     book_info_predictions = session['book_info_predictions']
     book_info_predictions = get_book_details_from_google(book_info_predictions['predTitle'], book_info_predictions['predAuthor'])
@@ -97,6 +113,8 @@ def book_details():
     db.session.add(commitBookGenrePred)
     db.session.commit()
     return render_template('book_details.html', book_genre_predictions = book_genre_predictions, image = 'static/' + book_genre_predictions['File Name'], book_info_predictions = book_info_predictions)
+
+
 
 # get all genre predictions
 @app.route('/show_all_genre_pred')
