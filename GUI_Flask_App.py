@@ -82,38 +82,62 @@ def upload_cover():
         return redirect(url_for('check_book_details'))
     return render_template('uploadCover.html')
 
-@app.route('/checkbookDetails')
+# after model predictions have been generated, redirect to this page for confimation
+@app.route('/checkbookDetails', methods=['POST', 'GET'])
 def check_book_details():
-    # display results and save to databases
     book_info_predictions = session['book_info_predictions']
     book_info_predictions = get_book_details_from_google(book_info_predictions['predTitle'], book_info_predictions['predAuthor'])
     book_info_predictions['FileName'] = session['book_info_predictions']['FileName']
-    commitBookInfoPred = BooksInformation(book_info_predictions['title'], book_info_predictions['authors'], book_info_predictions['publisher'], book_info_predictions['categories'], book_info_predictions['FileName'])
-    db.session.add(commitBookInfoPred)
-    db.session.commit()
-
+    
     book_genre_predictions=session['book_genre_predictions']
-    commitBookGenrePred = BooksPredictions(book_genre_predictions['Genre'], book_genre_predictions['Confidence'], book_genre_predictions['File Name'])
-    db.session.add(commitBookGenrePred)
-    db.session.commit()
+    
+    if request.method == 'POST':
+        # if predictions are correct user will select yes and will  be saved in database
+        if request.form['confirm_details_button'] == 'Yes':
+            
+            #submit to databases
+            commitBookInfoPred = BooksInformation(book_info_predictions['Title'], book_info_predictions['Authors'], book_info_predictions['Publisher'], book_info_predictions['Categories'], book_info_predictions['FileName'])
+            db.session.add(commitBookInfoPred)
+            db.session.commit()
+
+            commitBookGenrePred = BooksPredictions(book_genre_predictions['Genre'], book_genre_predictions['Confidence'], book_genre_predictions['File Name'])
+            db.session.add(commitBookGenrePred)
+            db.session.commit()
+            
+            # once saved redirect back to upload image
+            return redirect(url_for('upload_cover'))
+        elif request.form['confirm_details_button'] == 'No': 
+            return redirect(url_for('edit_book_details'))
+        else:
+            pass
     return render_template('check_book_details.html', book_genre_predictions = book_genre_predictions, image = 'static/' + book_genre_predictions['File Name'], book_info_predictions = book_info_predictions)
 
-@app.route('/editbookDetails')
-def checK_book_details():
-    # display results and save to databases
+# if user says the predictions are incorrect then redirect here to enter in correct information and save to database
+@app.route('/editbookDetails', methods=['POST', 'GET'])
+def edit_book_details():
     book_info_predictions = session['book_info_predictions']
     book_info_predictions = get_book_details_from_google(book_info_predictions['predTitle'], book_info_predictions['predAuthor'])
     book_info_predictions['FileName'] = session['book_info_predictions']['FileName']
-    commitBookInfoPred = BooksInformation(book_info_predictions['title'], book_info_predictions['authors'], book_info_predictions['publisher'], book_info_predictions['categories'], book_info_predictions['FileName'])
-    db.session.add(commitBookInfoPred)
-    db.session.commit()
-
     book_genre_predictions=session['book_genre_predictions']
-    commitBookGenrePred = BooksPredictions(book_genre_predictions['Genre'], book_genre_predictions['Confidence'], book_genre_predictions['File Name'])
-    db.session.add(commitBookGenrePred)
-    db.session.commit()
-    return render_template('book_details.html', book_genre_predictions = book_genre_predictions, image = 'static/' + book_genre_predictions['File Name'], book_info_predictions = book_info_predictions)
+    
+    if request.method == 'POST':
+        # display results and save to databases
+        book_info_predictions['title'] = request.form["updatedbooktitle"]
+        book_info_predictions['authors'] = request.form["updatedbookauthor"]
+        book_info_predictions['publisher'] = request.form["updatedbookpublisher"]
+        book_info_predictions['categories'] = request.form["updatedbookcategories"]
 
+        commitBookInfoPred = BooksInformation(book_info_predictions['title'], book_info_predictions['authors'], book_info_predictions['publisher'], book_info_predictions['categories'], book_info_predictions['FileName'])
+        db.session.add(commitBookInfoPred)
+        db.session.commit()
+
+        commitBookGenrePred = BooksPredictions(book_genre_predictions['Genre'], book_genre_predictions['Confidence'], book_genre_predictions['File Name'])
+        db.session.add(commitBookGenrePred)
+        db.session.commit()
+        
+        # once finished redirect to upload another
+        return redirect(url_for('upload_cover'))
+    return render_template('edit_book_details.html', book_genre_predictions = book_genre_predictions, image = 'static/' + book_genre_predictions['File Name'], book_info_predictions = book_info_predictions)
 
 
 # get all genre predictions

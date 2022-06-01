@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/styles.css') }}">
 
-<h1>Book Details</h1>
+<h1>Check Book Details</h1>
 
 <body>
 <img src="{{ image }}" alt="User Image" width="70%" height="70%" class="imagecenter">
@@ -14,7 +14,7 @@
 
 <h3>Book Genre Predictions</h3>
 
-<form action="{{ url_for('book_details') }}" method="post">
+<form action="{{ url_for('check_book_details') }}" method="post">
 
 <table id = "bookDetails">
 {% for key, value in book_genre_predictions.items() %}
@@ -37,3 +37,7 @@
         </tr>
     {% endfor %}
 </table>
+
+<h3>Are the Books Details Correct?</h3>
+<input type="submit" value="Yes" name="confirm_details_button" value="Yes" class="uploadButton">
+<input type="submit" name="confirm_details_button" value="No" class="uploadButton">

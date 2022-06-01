@@ -8,9 +8,9 @@ def get_book_details_from_google(title, author):
     firstbookresultdetails = jsondict['items'][0]['volumeInfo']
     print(firstbookresultdetails)
     bookInfomation = {}
-    bookInfomation['title'] = (firstbookresultdetails['title'])
-    bookInfomation['authors'] = (firstbookresultdetails['authors']) [0]
-    bookInfomation['publisher'] = (firstbookresultdetails['publisher'])
-    bookInfomation['categories'] = (firstbookresultdetails['categories'][0])
+    bookInfomation['Title'] = (firstbookresultdetails['title'])
+    bookInfomation['Authors'] = (firstbookresultdetails['authors']) [0]
+    bookInfomation['Publisher'] = (firstbookresultdetails['publisher'])
+    bookInfomation['Categories'] = (firstbookresultdetails['categories'][0])
     return bookInfomation
     

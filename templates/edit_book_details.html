@@ -1,0 +1,43 @@
+{% include  "navigation_bar.html" %}
+{% block body %}
+{% endblock %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename = 'styles/styles.css') }}">
+
+<h1>Edit Book Details</h1>
+
+<body>
+<img src="{{ image }}" alt="User Image" width="70%" height="70%" class="imagecenter">
+</body>
+
+&nbsp
+
+<h3>Book Genre Predictions</h3>
+
+<table id = "bookDetails">
+{% for key, value in book_genre_predictions.items() %}
+   <tr>
+        <th> {{ key }} </th>
+        <td> {{ value }} </td>
+   </tr>
+{% endfor %}
+</table>
+
+<h3>Book Information Predictions</h3>
+
+<form action="{{ url_for('edit_book_details') }}" method="post">
+
+    <h4> Title </h4>
+    <input name="updatedbooktitle" type="text" />
+    <h4> Author(s) </h4>
+    <input name="updatedbookauthor" type="text" />
+    <h4> Publisher </h4>
+    <input name="updatedbookpublisher" type="text" />
+    <h4> Categories </h4>
+    <input name="updatedbookcategories" type="text" />
+
+    &nbsp
+    &nbsp
+
+    <p><input type="submit" value="Save to Database" class="uploadButton"></p>
+</form>
