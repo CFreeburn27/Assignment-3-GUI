@@ -23,7 +23,7 @@ class BooksInformation(db.Model):
     Genre = db.Column(db.String(100))
     Publisher = db.Column(db.String(100))
     FileName = db.Column(db.String(100))
-    InfoLink = db.Column(db.String(1000))
+    InfoLink = db.Column(db.String(5000))
    
     def __init__(self, Title, Author, Genre, Publisher, FileName, InfoLink):
         self.Title = Title

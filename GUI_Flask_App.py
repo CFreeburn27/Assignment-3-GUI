@@ -128,10 +128,10 @@ def edit_book_details():
         book_info_predictions['authors'] = request.form["updatedbookauthor"]
         book_info_predictions['publisher'] = request.form["updatedbookpublisher"]
         book_info_predictions['categories'] = request.form["updatedbookcategories"]
-        book_info_predictions['infoLink'] = get_book_infoLink_from_google(book_info_predictions['title'], book_info_predictions['authors'])
+        book_info_predictions['InfoLink'] = get_book_infoLink_from_google(book_info_predictions['title'], book_info_predictions['authors'])
 
         commitBookInfoPred = BooksInformation(book_info_predictions['title'], book_info_predictions['authors'], book_info_predictions['publisher'], book_info_predictions['categories'],  \
-            book_info_predictions['FileName'], )
+            book_info_predictions['FileName'], book_info_predictions['InfoLink'])
         db.session.add(commitBookInfoPred)
         db.session.commit()
 
