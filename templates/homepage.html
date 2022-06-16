@@ -49,10 +49,27 @@
 <br />
 
 <table id = "bookDetails">
-    {% for key, value in exampleBookInfoPredictions.items() %}
-        <tr>
-            <th> {{ key }} </th>
-            <td> {{ value }} </td>
-        </tr>
-    {% endfor %}
-</table>
+    <thead>
+       <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Genre</th>
+          <th>Publisher</th>
+          <th>Book Cover Image</th>
+       </tr>
+    </thead>
+    
+    <tbody>
+          <tr>
+             <td>{{ exampleBookInfoPredictions.Title }}</td>
+             <td>{{ exampleBookInfoPredictions.Author }}</td>
+             <td>{{ exampleBookInfoPredictions.Genre }}</td>
+             <td>{{ exampleBookInfoPredictions.Publisher }}</td>
+             <td align="center" > 
+                <a href="{{exampleBookInfoPredictions.InfoLink}}" target="_blank">
+                <img src="static/{{ exampleBookInfoPredictions.FileName }}" height=50%%% width=50%% alt=""/>
+                </a>
+             </td>
+          </tr>
+    </tbody>
+ </table>

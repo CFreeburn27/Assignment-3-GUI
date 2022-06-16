@@ -4,7 +4,7 @@ from flask_navigation import Navigation
 import os
 from booksDatabase import db, BooksPredictions, BooksInformation
 from genre_model import GenreModel
-from googleAPI import get_book_details_from_google
+from googleAPI import get_book_details_from_google, get_book_infoLink_from_google
 from ocr_feature import MainOCR
 
 # configure the 2 models
@@ -26,6 +26,7 @@ exampleBookInfoPredictions['Author'] = ' Daron Acemoglu and James Robinson'
 exampleBookInfoPredictions['Genre'] = 'Economics'
 exampleBookInfoPredictions['Publisher'] = 'Crown Business'
 exampleBookInfoPredictions['FileName'] = 'example_image_homepage.jpg'
+exampleBookInfoPredictions['InfoLink'] = 'https://play.google.com/store/books/details?id=PLlOCUIAh88C&source=gbs_api'
 
 # configure the app
 app = Flask(__name__)
@@ -96,7 +97,8 @@ def check_book_details():
         if request.form['confirm_details_button'] == 'Yes':
             
             #submit to databases
-            commitBookInfoPred = BooksInformation(book_info_predictions['Title'], book_info_predictions['Authors'], book_info_predictions['Publisher'], book_info_predictions['Categories'], book_info_predictions['FileName'])
+            commitBookInfoPred = BooksInformation(book_info_predictions['Title'], book_info_predictions['Authors'], book_info_predictions['Publisher'], book_info_predictions['Categories'] \
+                , book_info_predictions['FileName'], book_info_predictions['InfoLink'])
             db.session.add(commitBookInfoPred)
             db.session.commit()
 
@@ -126,8 +128,10 @@ def edit_book_details():
         book_info_predictions['authors'] = request.form["updatedbookauthor"]
         book_info_predictions['publisher'] = request.form["updatedbookpublisher"]
         book_info_predictions['categories'] = request.form["updatedbookcategories"]
+        book_info_predictions['infoLink'] = get_book_infoLink_from_google(book_info_predictions['title'], book_info_predictions['authors'])
 
-        commitBookInfoPred = BooksInformation(book_info_predictions['title'], book_info_predictions['authors'], book_info_predictions['publisher'], book_info_predictions['categories'], book_info_predictions['FileName'])
+        commitBookInfoPred = BooksInformation(book_info_predictions['title'], book_info_predictions['authors'], book_info_predictions['publisher'], book_info_predictions['categories'],  \
+            book_info_predictions['FileName'], )
         db.session.add(commitBookInfoPred)
         db.session.commit()
 

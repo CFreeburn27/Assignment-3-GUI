@@ -9,7 +9,7 @@
    <h1>Books Information Predictions Database</h1>
    <body>
       
-    <table id = "bookDetails">
+    <table style="text-align:center" id = "bookDetails">
          <thead>
             <tr>
                <th>Title</th>
@@ -27,11 +27,15 @@
                   <td>{{ book.Author }}</td>
                   <td>{{ book.Genre }}</td>
                   <td>{{ book.Publisher }}</td>
-                  <td><img src="static/{{ book.FileName }}" alt="" border=3 height=50%% width=50%%></img></td>
+                  <td align="center" > 
+                     <a href="{{book.InfoLink}}" target="_blank">
+                     <img src="static/{{ book.FileName }}" height=50%%% width=50%% alt=""/>
+                     </a>
+                  </td>
                </tr>
             {% endfor %}
          </tbody>
       </table>
-      
+
    </body>
 </html>
