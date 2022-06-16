@@ -4,7 +4,7 @@ from flask_navigation import Navigation
 import os
 from booksDatabase import db, BooksPredictions, BooksInformation
 from genre_model import GenreModel
-from googleAPI import get_book_details_from_google, get_book_infoLink_from_google
+from googleAPI import get_book_details_from_google
 from ocr_feature import MainOCR
 
 # configure the 2 models
@@ -97,8 +97,8 @@ def check_book_details():
         if request.form['confirm_details_button'] == 'Yes':
             
             #submit to databases
-            commitBookInfoPred = BooksInformation(book_info_predictions['Title'], book_info_predictions['Authors'], book_info_predictions['Publisher'], book_info_predictions['Categories'] \
-                , book_info_predictions['FileName'], book_info_predictions['InfoLink'])
+            commitBookInfoPred = BooksInformation(book_info_predictions['Title'], book_info_predictions['Authors'], book_info_predictions['Categories'], book_info_predictions['Publisher'], \
+             book_info_predictions['FileName'], book_info_predictions['InfoLink'])
             db.session.add(commitBookInfoPred)
             db.session.commit()
 
@@ -118,20 +118,17 @@ def check_book_details():
 @app.route('/editbookDetails', methods=['POST', 'GET'])
 def edit_book_details():
     book_info_predictions = session['book_info_predictions']
-    book_info_predictions = get_book_details_from_google(book_info_predictions['predTitle'], book_info_predictions['predAuthor'])
-    book_info_predictions['FileName'] = session['book_info_predictions']['FileName']
-    book_genre_predictions=session['book_genre_predictions']
+    book_genre_predictions = session['book_genre_predictions']
     
     if request.method == 'POST':
         # display results and save to databases
-        book_info_predictions['title'] = request.form["updatedbooktitle"]
-        book_info_predictions['authors'] = request.form["updatedbookauthor"]
-        book_info_predictions['publisher'] = request.form["updatedbookpublisher"]
-        book_info_predictions['categories'] = request.form["updatedbookcategories"]
-        book_info_predictions['InfoLink'] = get_book_infoLink_from_google(book_info_predictions['title'], book_info_predictions['authors'])
+        searchTitle = request.form["updatedbooktitle"]
+        searchAuthor = request.form["updatedbookauthor"]
+        book_info_predictions = get_book_details_from_google(searchTitle, searchAuthor)
+        book_info_predictions['FileName'] = session['book_info_predictions']['FileName']
 
-        commitBookInfoPred = BooksInformation(book_info_predictions['title'], book_info_predictions['authors'], book_info_predictions['publisher'], book_info_predictions['categories'],  \
-            book_info_predictions['FileName'], book_info_predictions['InfoLink'])
+        commitBookInfoPred = BooksInformation(book_info_predictions['Title'], book_info_predictions['Authors'], book_info_predictions['Categories'], book_info_predictions['Publisher'], \
+             book_info_predictions['FileName'], book_info_predictions['InfoLink'])
         db.session.add(commitBookInfoPred)
         db.session.commit()
 

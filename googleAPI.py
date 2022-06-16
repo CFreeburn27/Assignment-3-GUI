@@ -17,12 +17,5 @@ def get_book_details_from_google(title, author):
     return bookInfomation
     
     
-def get_book_infoLink_from_google(title, author):
-    bookResponse = requests.get('https://www.googleapis.com/books/v1/volumes?q=' + title + author)           
-    jsondict = bookResponse.json()
-    firstbookresultdetails = jsondict['items'][0]['volumeInfo']
-    book_infoLink = (firstbookresultdetails['infoLink'])
-    return book_infoLink
-
 if __name__ == '__main__':
     get_book_details_from_google('why nations fail', 'Daron Acemoglu')
